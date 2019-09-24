@@ -6,23 +6,28 @@ using Meadow.Hardware;
 using Meadow.Foundation.Displays;
 using Meadow.Foundation.Graphics;
 using Meadow.Foundation.Audio.Radio;
-using Meadow.Foundation.Sensors.Buttons;
+using System.Threading.Tasks;
 
 namespace BasicFMRadio
 {
     public class RadioApp : App<F7Micro, RadioApp>
     {
         IDigitalOutputPort stereoLed;
+        IDigitalInputPort muteButton;
 
         GraphicsLibrary display;
 
         TEA5767 radio;
 
-        PushButton buttonMute, buttonNext;
+        Timer buttonTimer;
 
         public RadioApp()
         {
             InitializeHardware();
+
+            UpdateDisplay();
+
+            MonitorButtons();
         }
 
         void UpdateDisplay ()
@@ -36,25 +41,37 @@ namespace BasicFMRadio
 
             display.DrawText(0, 20, radio.GetSignalLevel() + "db");
 
-            if(radio.IsStereo())
-            {
-                display.DrawText(0, 30, "muted");
-            }
+            display.DrawText(0, 30, radio.IsMuted ? "mute" : "on");
 
             display.Show();
         }
 
-        public void InitializeHardware()
+        void MonitorButtons()
+        {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (muteButton.State == true)
+                    {
+                        radio.IsMuted = !radio.IsMuted;
+
+                    }
+
+                    UpdateDisplay();
+
+                    Thread.Sleep(500);
+                }
+            });
+        }
+
+        void InitializeHardware()
         {
             Console.WriteLine("Configuring hardware");
             stereoLed = Device.CreateDigitalOutputPort(Device.Pins.OnboardLedRed);
 
-            Console.WriteLine("Create buttons");
-            buttonMute = new PushButton(Device, Device.Pins.D14);
-            buttonNext = new PushButton(Device, Device.Pins.D15);
-
-            buttonMute.Clicked += ButtonMute_Clicked;
-            buttonNext.Clicked += ButtonNext_Clicked;
+            Console.WriteLine("Create radio button");
+            muteButton = Device.CreateDigitalInputPort(Device.Pins.D12);
 
             Console.WriteLine("Create Spi bus");
 
@@ -67,7 +84,7 @@ namespace BasicFMRadio
                 resetPin: Device.Pins.D01,
                 width: 128, height: 64);
 
-            st7565.SetContrast(10);
+            st7565.SetContrast(5);
 
             Console.WriteLine("Create graphics lib");
 
@@ -79,16 +96,15 @@ namespace BasicFMRadio
 
             Console.WriteLine("Create TEA5767 instance");
             radio = new TEA5767(i2cBus);
+
+            Thread.Sleep(500); //quick test
+
+            radio.SetFrequency(94.9f);
         }
 
-        private void ButtonMute_Clicked(object sender, EventArgs e)
+        private void Button_Changed(object sender, DigitalInputPortEventArgs e)
         {
-            radio.IsMuted = !radio.IsMuted;
-            UpdateDisplay();
-        }
-
-        private void ButtonNext_Clicked(object sender, EventArgs e)
-        {
+            Console.WriteLine("Button pressed");
             radio.SearchNextSilent();
             UpdateDisplay();
         }
