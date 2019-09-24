@@ -1,0 +1,17 @@
+<Project Sdk="Meadow.Sdk/1.1">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>App</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WildernessLabs.Meadow.Assemblies" Version="0.1.1" />
+    <PackageReference Include="Meadow" Version="0.7.0" />
+    <PackageReference Include="Meadow.Foundation" Version="0.8.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Audio.Radio.TEA5767\Audio.Radio.TEA5767.csproj" />
+    <ProjectReference Include="..\Displays.GraphicsLibrary\Displays.GraphicsLibrary.csproj" />
+    <ProjectReference Include="..\Displays.ST7565\Displays.ST7565.csproj" />
+  </ItemGroup>
+</Project>
