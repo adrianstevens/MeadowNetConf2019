@@ -19,8 +19,6 @@ namespace BasicFMRadio
 
         TEA5767 radio;
 
-        Timer buttonTimer;
-
         public RadioApp()
         {
             InitializeHardware();

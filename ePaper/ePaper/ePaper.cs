@@ -38,9 +38,25 @@ namespace BasicFMRadio
 
         void UpdateDisplay()
         { 
-            graphics.DrawText(0, 0, "ePaper for Meadow");
-            graphics.DrawText(0, 16, ".NET Conf 2019");
-            graphics.DrawText(0, 32, "Wilderness Labs", Meadow.Foundation.Color.Yellow);
+            //any color but black will show the ePaper alternate color 
+            graphics.DrawRectangle(0, 0, 128, 34, Meadow.Foundation.Color.Red, false);
+
+            graphics.DrawText(2, 2, ".NET Conf 2019");
+            graphics.DrawText(2, 20, "Meadow F7");
+
+            int ySpacing = 6;
+
+            for (int i = 0; i < 3; i++)
+            {
+                graphics.DrawLine(2, 70 + ySpacing * i, 22, 50 + ySpacing * i);
+                graphics.DrawLine(22, 50 + ySpacing * i, 42, 70 + ySpacing * i);
+                graphics.DrawLine(44, 70 + ySpacing * i, 64, 50 + ySpacing * i);
+                graphics.DrawLine(64, 50 + ySpacing * i, 84, 70 + ySpacing * i);
+                graphics.DrawLine(86, 70 + ySpacing * i, 106, 50 + ySpacing * i);
+                graphics.DrawLine(106, 50 + ySpacing * i, 126, 70 + ySpacing * i);
+            }
+
+            Console.WriteLine("Show");
 
             graphics.Show();
         }
