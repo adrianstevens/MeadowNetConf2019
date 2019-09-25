@@ -3,3 +3,5 @@
 https://www.dotnetconf.net
 
 https://www.wildernesslabs.co
+
+https://www.hanselman.com
