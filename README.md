@@ -1,4 +1,4 @@
-### Code samples for Scott Hanselman's .NET tConf 2019 Meadow presentation.
+### Code samples for Scott Hanselman's .NET Conf 2019 Meadow presentation.
 
 https://www.dotnetconf.net
 
